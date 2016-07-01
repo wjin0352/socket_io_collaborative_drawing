@@ -9,7 +9,25 @@
 // Listen for the mouseup event
 // When the event is fired, set the drawing variable to false
 // Only perform the mousemove actions when drawing is set to true
+
 var socket = io();
+
+// word list for guessers
+var WORDS = [
+    "word", "letter", "number", "person", "pen", "class", "people",
+    "sound", "water", "side", "place", "man", "men", "woman", "women", "boy",
+    "girl", "year", "day", "week", "month", "name", "sentence", "line", "air",
+    "land", "home", "hand", "house", "picture", "animal", "mother", "father",
+    "brother", "sister", "world", "head", "page", "country", "question",
+    "answer", "school", "plant", "food", "sun", "state", "eye", "city", "tree",
+    "farm", "story", "sea", "night", "day", "life", "north", "south", "east",
+    "west", "child", "children", "example", "paper", "music", "river", "car",
+    "foot", "feet", "book", "science", "room", "friend", "idea", "fish",
+    "mountain", "horse", "watch", "color", "face", "wood", "list", "bird",
+    "body", "dog", "family", "song", "door", "product", "wind", "ship", "area",
+    "rock", "order", "fire", "problem", "piece", "top", "bottom", "king",
+    "space"
+];
 
 var pictionary = function() {
   var canvas, context, drawing;
@@ -33,7 +51,6 @@ var pictionary = function() {
     var offset = canvas.offset();
     var position = {x: event.pageX - offset.left,
                     y: event.pageY - offset.top};
-    // draw(position);
     socket.emit('draw', position);
 
   });
@@ -43,10 +60,7 @@ var pictionary = function() {
     var offset = canvas.offset();
     var position = {x: event.pageX - offset.left,
                     y: event.pageY - offset.top};
-    // if (drawing) {
-      // draw(position);
-      socket.emit('draw', position);
-    // }
+    socket.emit('draw', position);
   });
 
   canvas.on('mouseup', function(event) {
@@ -60,7 +74,34 @@ var pictionary = function() {
   socket.on('user count', function(user_count) {
     console.log('User count: ' + user_count);
   })
+
+  // guess box feature
+  var guessBox;
+
+  var onKeyDown = function(event) {
+    if (event.keyCode != 13) { // Enter
+        return;
+    }
+
+    var guess = guessBox.val();
+    socket.emit('guess', guess);
+    console.log(guess);
+
+    guessBox.val('');
+    // $('#show_guess').text(guess);
+  };
+
+  guessBox = $('#guess input');
+  showGuess = $('div#show_guess');
+  guessBox.on('keydown', onKeyDown);
+
+  // listens for the broadcast.emit 'guess' event response from server
+  socket.on('guess', function(guess) {
+    $('#show_guess').text(guess);
+  });
 };
+
+
 
 // create an event handler thats triggered here in the client side code main.js using emit.
 $(document).ready(function() {

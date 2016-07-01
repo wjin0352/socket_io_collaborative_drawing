@@ -27,24 +27,13 @@ h1 {
     padding: 10px;
 }
 
-canvas, canvas#group-canvas {
-    width:100%;
+canvas {
+    width: 800px;
     height: 600px;
     border: 1px #C7CACD solid;
-    display: inline-block;
+    display: block;
     margin: 0 auto;
 }
-
-div#main, div#group-view {
-    width: 48%;
-    display: inline-block;
-    /*margin: 0 auto;*/
-}
-
-#group-view {
-    margin-left: 20px;
-}
-
 </style>
 
 <!-- JS -->
@@ -54,10 +43,10 @@ div#main, div#group-view {
 <script src="main.js"></script>
 
 <h1>Pictionary</h1>
-<div id="main">
-  <canvas id="canvas"></canvas>
+<div id="top-message">
+    <div id="guess" >
+        Make a guess: <input type="text">
+    </div>
+    <div id="show_guess" ></div>
 </div>
-
-<div id="group-view">
-  <canvas id="group-canvas"></canvas>
-</div>
+<canvas id="canvas"></canvas>

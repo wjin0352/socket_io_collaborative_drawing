@@ -8,6 +8,17 @@ app.use(express.static('public'));
 var server = http.Server(app);
 var io = socket_io(server);
 
+// create a Constructor for user
+var user_id = 0;
+
+var User = function() {
+  this.user_id = user_id;
+  user_id++;
+  console.log('user_id: '+ user_id + ', this.user_id: ' + this.user_id );
+  // console.log(user_name);
+  // this.user_name = user_name;
+}
+
 var user_count = 0;
 // created server side event handlers for socket connections, draw etc.These will be triggered
 // on the client side code, with event handlers that trigger them with emit on client side.
@@ -18,15 +29,33 @@ io.on('connection', function(socket) {
   console.log('User count: ' + user_count);
   socket.broadcast.emit('user count', user_count);
 
-  // defining event handler for 'draw' event thats emitted on client side
-  socket.on('draw', function(position) {
-    // socket.broadcast.emit('draw', position);
-    io.emit('draw' ,position);
-    // console.log(socket);
+  var first_user = false;
+  var user = new User();
 
-    // use io.emit('some event', {for: 'everyone'}) to send an event to everyone
-    // io.emit('draw', { 'my position: ': position});
-  });
+  if(user.user_id === 1) {
+    var first_user = true;
+  } else {
+    var first_user = false;
+  }
+
+  // defining event handler for 'draw' event thats emitted on client side
+  // only the first user should be able to draw, the others will guess
+
+    socket.on('draw', function(position) {
+      // socket.broadcast.emit('draw', position);
+      // only the first user should be able to draw
+      if (first_user) {
+        io.emit('draw', position);
+      }
+    });
+
+
+    socket.on('guess', function(userGuess) {
+      if(!first_user) {
+        socket.broadcast.emit('guess', userGuess);
+      }
+    });
+
 
   socket.on('disconnect', function(disconnect) {
     console.log('User has disconnected');
