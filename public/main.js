@@ -75,14 +75,28 @@ var pictionary = function() {
     console.log('User count: ' + user_count);
   })
 
+  socket.on('cant_draw', function() {
+    var error = $('#error');
+    setTimeout(function() {
+      error.text('');
+    }, 2500);
+    error.text('Sorry only the first user can draw.  You can try a guess.');
+  });
+
+  socket.on('cant_guess', function() {
+    var error = $('#error');
+    setTimeout(function(){
+      error.text('');
+    }, 2500);
+    error.text('You can only draw, let the other users guess.');
+  });
+
   // guess box feature
   var guessBox;
-
   var onKeyDown = function(event) {
     if (event.keyCode != 13) { // Enter
         return;
     }
-
     var guess = guessBox.val();
     socket.emit('guess', guess);
     console.log(guess);
@@ -97,7 +111,7 @@ var pictionary = function() {
 
   // listens for the broadcast.emit 'guess' event response from server
   socket.on('guess', function(guess) {
-    $('#show_guess').text(guess);
+    $('#show_guess').text("user guess: " + guess );
   });
 };
 

@@ -12,8 +12,8 @@ var io = socket_io(server);
 var user_id = 0;
 
 var User = function() {
-  this.user_id = user_id;
   user_id++;
+  this.user_id = user_id;
   console.log('user_id: '+ user_id + ', this.user_id: ' + this.user_id );
   // console.log(user_name);
   // this.user_name = user_name;
@@ -46,6 +46,8 @@ io.on('connection', function(socket) {
       // only the first user should be able to draw
       if (first_user) {
         io.emit('draw', position);
+      } else {
+        io.emit('cant_draw');
       }
     });
 
@@ -53,6 +55,8 @@ io.on('connection', function(socket) {
     socket.on('guess', function(userGuess) {
       if(!first_user) {
         socket.broadcast.emit('guess', userGuess);
+      } else {
+        io.emit('cant_guess');
       }
     });
 

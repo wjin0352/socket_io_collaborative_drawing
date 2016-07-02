@@ -34,6 +34,15 @@ canvas {
     display: block;
     margin: 0 auto;
 }
+
+#error {
+    color: red;
+}
+
+#show_guess {
+    color: blue;
+}
+
 </style>
 
 <!-- JS -->
@@ -47,6 +56,7 @@ canvas {
     <div id="guess" >
         Make a guess: <input type="text">
     </div>
-    <div id="show_guess" ></div>
+    <div id="show_guess"></div>
+    <div id="error"></div>
 </div>
 <canvas id="canvas"></canvas>
