@@ -45,7 +45,8 @@ var removeUser = function(user) {
 
 var notifyDrawer = function() {
   if(users[0]) {
-    users[0].socket.emit('is_drawer');
+    var word = randomWord();
+    users[0].socket.emit('is_drawer', word);
   }
 };
 
@@ -54,6 +55,7 @@ var createDrawHandler = function(user) {
     if(isFirstUser(user)) {
       io.emit('draw', position);
     } else {
+      // console.log(user);
       user.socket.emit('cant_draw');
     }
   }
@@ -67,12 +69,13 @@ var createDisconnectHandler = function(user) {
 }
 
 var createUser = function(socket) {
-  new User(socket);
+  var user = new User(socket);
   users.push(user);
-
   if(isFirstUser(user)) {
     notifyDrawer();
+    return user;
   }
+  return user;
 };
 
 var createGuessHandler = function(user) {

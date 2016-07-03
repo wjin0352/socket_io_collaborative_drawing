@@ -74,8 +74,8 @@ var pictionary = function() {
     error.text('You can only draw, let the other users guess.');
   });
 
-  socket.on('is_drawer', function() {
-    alert('test');
+  socket.on('is_drawer', function(word) {
+    console.log(word);
   });
   // socket.on('cant_guess', function() {
   //   var error = $('#error');
