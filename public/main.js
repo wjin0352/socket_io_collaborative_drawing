@@ -12,22 +12,6 @@
 
 var socket = io();
 
-// word list for guessers
-var WORDS = [
-    "word", "letter", "number", "person", "pen", "class", "people",
-    "sound", "water", "side", "place", "man", "men", "woman", "women", "boy",
-    "girl", "year", "day", "week", "month", "name", "sentence", "line", "air",
-    "land", "home", "hand", "house", "picture", "animal", "mother", "father",
-    "brother", "sister", "world", "head", "page", "country", "question",
-    "answer", "school", "plant", "food", "sun", "state", "eye", "city", "tree",
-    "farm", "story", "sea", "night", "day", "life", "north", "south", "east",
-    "west", "child", "children", "example", "paper", "music", "river", "car",
-    "foot", "feet", "book", "science", "room", "friend", "idea", "fish",
-    "mountain", "horse", "watch", "color", "face", "wood", "list", "bird",
-    "body", "dog", "family", "song", "door", "product", "wind", "ship", "area",
-    "rock", "order", "fire", "problem", "piece", "top", "bottom", "king",
-    "space"
-];
 
 var pictionary = function() {
   var canvas, context, drawing;
@@ -52,7 +36,6 @@ var pictionary = function() {
     var position = {x: event.pageX - offset.left,
                     y: event.pageY - offset.top};
     socket.emit('draw', position);
-
   });
 
   canvas.on('mousedown', function(event) {
@@ -90,6 +73,19 @@ var pictionary = function() {
     }, 2500);
     error.text('You can only draw, let the other users guess.');
   });
+
+  socket.on('is_drawer', function() {
+    alert('test');
+  });
+  // socket.on('cant_guess', function() {
+  //   var error = $('#error');
+  //   new Promise( function(resolve, reject) {
+  //     setTimeout(resolve, 2500);
+  //   }).then(function() {
+  //     error.text('');
+  //   })
+  //   error.text('You can only draw, let the other users guess.');
+  // });
 
   // guess box feature
   var guessBox;
