@@ -14,13 +14,18 @@ var socket = io();
 
 
 var pictionary = function() {
-  var canvas, context, drawing;
+  var canvas, context, drawing, user_word;
 
   var draw = function(position) {
     context.beginPath();
     context.arc(position.x, position.y,
                          6, 0, 2 * Math.PI);
     context.fill();
+  };
+
+  var showWord = function(word) {
+    user_word = $('#word');
+    user_word.text('your word is: ' + word);
   };
 
   canvas = $('canvas');
@@ -76,6 +81,7 @@ var pictionary = function() {
 
   socket.on('is_drawer', function(word) {
     console.log(word);
+    showWord(word);
   });
   // socket.on('cant_guess', function() {
   //   var error = $('#error');
@@ -110,12 +116,10 @@ var pictionary = function() {
     $('#show_guess').text("user guess: " + guess );
   });
 };
-
-
-
 // create an event handler thats triggered here in the client side code main.js using emit.
 $(document).ready(function() {
   pictionary();
+
 });
 
 

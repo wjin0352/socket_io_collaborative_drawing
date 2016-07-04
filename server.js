@@ -40,7 +40,7 @@ var isFirstUser = function(user) {
 var removeUser = function(user) {
   var userIndex = users.indexOf(user);
   users.splice(userIndex, 1);
-  notifyDrawer();
+  // notifyDrawer();
 };
 
 var notifyDrawer = function() {
@@ -50,6 +50,7 @@ var notifyDrawer = function() {
   }
 };
 
+// currying
 var createDrawHandler = function(user) {
   return function(position) {
     if(isFirstUser(user)) {
@@ -58,15 +59,16 @@ var createDrawHandler = function(user) {
       // console.log(user);
       user.socket.emit('cant_draw');
     }
-  }
-}
+  };
+};
+
 // currying
 var createDisconnectHandler = function(user) {
   return function(disconnect) {
     removeUser(user);
     console.log('User has disconnected');
-  }
-}
+  };
+};
 
 var createUser = function(socket) {
   var user = new User(socket);
@@ -92,10 +94,7 @@ var randomWord = function() {
   var word = WORDS[Math.floor(Math.random() * WORDS.length)];
   return word;
 }
-// created server side event handlers for socket connections, draw etc.These will be triggered
-// on the client side code, with event handlers that trigger them with emit on client side.
 
-// Notice that I initialize a new instance of socket.io by passing the http (the HTTP server) object. Then I listen on the connection event for incoming sockets, and I log it to the console.
 io.on('connection', function(socket) {
   var user = createUser(socket);
 
